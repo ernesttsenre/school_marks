@@ -5,22 +5,6 @@
         {% trans with {'%week%': week|date('W') } from "messages" %}marks_by_week{% endtrans %}
     </h1>
 
-    {% if subject %}
-        <ol class="breadcrumb">
-            <li>
-                <a href="{{ path('marks_page', {'motherId': mother.id}) }}">
-                    {% trans from "messages" %}breadcrumbs.all_subjects{% endtrans %}
-                </a>
-            </li>
-            <li class="active">{{ subject.title }}</li>
-        </ol>
-    {% endif %}
-
-    <div class="jumbotron">
-        {% form_theme filterForm 'bootstrap_3_horizontal_layout.html.twig' %}
-        {{ form(filterForm) }}
-    </div>
-
     {% if mother %}
         {% for learner in mother.learners %}
             <div class="jumbotron">
@@ -30,7 +14,15 @@
                     <thead>
                     <tr>
                         <th>
-                            {% trans from "messages" %}subject.header{% endtrans %}
+                            {% if order == 'asc' %}
+                                <a href="{{ path('marks_page_sort', {'motherId': mother.id, 'order': 'desc'}) }}">
+                                    {% trans from "messages" %}subject.header{% endtrans %} &uarr;
+                                </a>
+                            {% else %}
+                                <a href="{{ path('marks_page_sort', {'motherId': mother.id, 'order': 'asc'}) }}">
+                                    {% trans from "messages" %}subject.header{% endtrans %} &darr;
+                                </a>
+                            {% endif %}
                         </th>
                         <th>
                             {% trans from "messages" %}learner.header{% endtrans %}
@@ -48,9 +40,7 @@
                         {% if mark.learner == learner %}
                             <tr class="{{ mark.color }}">
                                 <td>
-                                    <a href="{{ path('marks_by_subject_page', {'motherId': mother.id, 'subjectId': mark.subject.id}) }}">
-                                        {{ mark.subject.title }}
-                                    </a>
+                                    {{ mark.subject.title }}
                                 </td>
                                 <td>
                                     {{ mark.teacher.title }}

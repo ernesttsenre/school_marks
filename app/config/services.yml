@@ -1,7 +1,3 @@
 parameters:
 
 services:
-    mark.filter:
-            class:        AppBundle\Service\MarkFilter
-            arguments:
-                entityManager: "@doctrine.orm.entity_manager"

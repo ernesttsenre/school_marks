@@ -12,6 +12,7 @@ class DefaultController extends Controller
 {
     /**
      * @Route("/", name="homepage")
+     *
      * @return Response
      */
     public function indexAction()
@@ -28,35 +29,29 @@ class DefaultController extends Controller
     /**
      * @param Request $request
      * @param int $motherId
-     * @param int $subjectId
+     * @param string $order
      *
      * @Route("/marks/{motherId}", name="marks_page", requirements={"motherId": "\d+"})
-     * @Route("/marks/{motherId}/{subjectId}", name="marks_by_subject_page", requirements={"motherId": "\d+"})
+     * @Route("/marks/{motherId}/{order}", name="marks_page_sort",
+     *     requirements={"motherId": "\d+", "order": "asc|desc"})
+     *
      * @return Response
      */
-    public function marksAction(Request $request, $motherId, $subjectId = null)
+    public function marksAction(Request $request, $motherId, $order = 'asc')
     {
-        $marksFilter = $this->get('mark.filter');
-        $currentWeek = $marksFilter->getCurrentWeek();
+        $currentWeek = new \DateTime('monday this week');
 
-        $form = $this->createForm(MarkFilterType::class, null, [
-            'motherId' => $motherId,
-            'weekStart' => $currentWeek,
-        ]);
+        $marks = $this->getDoctrine()
+            ->getRepository('AppBundle:Mark')
+            ->findByParentsAndSubject($currentWeek, $motherId, $order);
 
-        // Get marks by route and form parameters
-        $form->handleRequest($request);
-        $marks = $marksFilter->getMarks($motherId, $subjectId, $form);
-
-        $subject = $marksFilter->getSubject();
         $mother = $this->getDoctrine()->getRepository('AppBundle:Mother')->find($motherId);
 
         return $this->render('default/marks.html.twig', [
             'week' => $currentWeek,
             'mother' => $mother,
             'marks' => $marks,
-            'subject' => $subject,
-            'filterForm' => $form->createView()
+            'order' => $order
         ]);
     }
 }

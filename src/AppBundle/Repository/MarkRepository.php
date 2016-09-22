@@ -15,30 +15,25 @@ class MarkRepository extends EntityRepository
     /**
      * @param \DateTime $week
      * @param integer $motherId
-     * @param integer|null $subjectId
+     * @param string $order
      * @return array
      */
-    public function findByParentsAndSubject(\DateTime $week, $motherId, $subjectId = null)
+    public function findByParentsAndSubject(\DateTime $week, $motherId, $order)
     {
         $queryBuilder = $this->createQueryBuilder('mark');
 
         // Filter by mother
         $queryBuilder
             ->join('mark.learner', 'learner', 'WITH', 'learner.mother = :motherId')
+            ->join('mark.subject', 'subject')
             ->where('mark.created >= :startWeekDate')
             ->setParameters([
                 'motherId' => $motherId,
                 'startWeekDate' => $week
             ]);
 
-        // If we need filter by subject
-        if (!is_null($subjectId)) {
-            $queryBuilder->andWhere('mark.subject = :subjectId');
-            $queryBuilder->setParameter('subjectId', $subjectId);
-        }
-
         return $queryBuilder
-            ->orderBy('mark.created', 'DESC')
+            ->orderBy('subject.title', $order)
             ->getQuery()
             ->getResult();
     }
