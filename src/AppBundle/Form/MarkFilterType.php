@@ -42,8 +42,7 @@ class MarkFilterType extends AbstractType
             ->add('apply', SubmitType::class, [
                 'label' => 'apply.label',
                 'translation_domain' => 'forms',
-            ])
-        ;
+            ]);
     }
 
     /**
@@ -53,7 +52,9 @@ class MarkFilterType extends AbstractType
     {
         $resolver->setDefaults(array(
             'motherId' => null,
-            'weekStart' => new \DateTime()
+            'weekStart' => new \DateTime(),
         ));
     }
+
+
 }

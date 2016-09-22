@@ -36,38 +36,23 @@ class DefaultController extends Controller
      */
     public function marksAction(Request $request, $motherId, $subjectId = null)
     {
-        $week = new \DateTime('monday this week');
+        $marksFilter = $this->get('mark.filter');
+        $currentWeek = $marksFilter->getCurrentWeek();
 
-        // Форма для фильтрации по предметам
         $form = $this->createForm(MarkFilterType::class, null, [
             'motherId' => $motherId,
-            'weekStart' => $week
+            'weekStart' => $currentWeek,
         ]);
 
+        // Get marks by route and form parameters
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $filterMark = $form->get('filter')->getData();
-            if ($filterMark) {
-                $subjectId = $filterMark->getSubject()->getId();
-            }
-        }
+        $marks = $marksFilter->getMarks($motherId, $subjectId, $form);
 
-        // Оценки детей отфильтрованные по родителю и предмету
-        $marks = $this->getDoctrine()
-            ->getRepository('AppBundle:Mark')
-            ->findByParentsAndSubject($week, $motherId, $subjectId);
-
-        // Если фильтровался предмет, то он тоже нужен в виде
-        $subject = null;
-        if (!is_null($subjectId)) {
-            $subject = $this->getDoctrine()->getRepository('AppBundle:Subject')->find($subjectId);
-        }
-
-        // Родитель, чтобы знать, каких детей искать
+        $subject = $marksFilter->getSubject();
         $mother = $this->getDoctrine()->getRepository('AppBundle:Mother')->find($motherId);
 
         return $this->render('default/marks.html.twig', [
-            'week' => $week,
+            'week' => $currentWeek,
             'mother' => $mother,
             'marks' => $marks,
             'subject' => $subject,

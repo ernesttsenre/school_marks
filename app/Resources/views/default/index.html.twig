@@ -14,13 +14,13 @@
             <table class="table table-stripped">
                 <tbody>
                 {% for mother in mothers %}
-                <tr>
-                    <td>
-                        <a href="{{ path('marks_page', {'mother_id': mother.id}) }}">
-                            {{ mother.title }}
-                        </a>
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            <a href="{{ path('marks_page', {'motherId': mother.id}) }}">
+                                {{ mother.title }}
+                            </a>
+                        </td>
+                    </tr>
                 {% endfor %}
                 </tbody>
             </table>
