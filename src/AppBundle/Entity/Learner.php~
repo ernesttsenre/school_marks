@@ -2,20 +2,18 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Learner
- *
  * @ORM\Table(name="learner")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\LearnerRepository")
+ * @ORM\Entity
  */
 class Learner
 {
     /**
-     * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -23,8 +21,6 @@ class Learner
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
@@ -36,10 +32,10 @@ class Learner
     private $created;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Parents", inversedBy="learners")
-     * @ORM\JoinColumn(name="parents_id", referencedColumnName="id")
+     * @ORM\ManyToOne(targetEntity="Mother", inversedBy="learners")
+     * @ORM\JoinColumn(name="mother_id", referencedColumnName="id")
      */
-    private $parents;
+    private $mother;
 
     /**
      * @ORM\OneToMany(targetEntity="Mark", mappedBy="learner")
@@ -47,8 +43,6 @@ class Learner
     private $marks;
 
     /**
-     * Get id
-     *
      * @return int
      */
     public function getId()
@@ -57,8 +51,6 @@ class Learner
     }
 
     /**
-     * Set title
-     *
      * @param string $title
      *
      * @return Learner
@@ -71,8 +63,6 @@ class Learner
     }
 
     /**
-     * Get title
-     *
      * @return string
      */
     public function getTitle()
@@ -81,44 +71,39 @@ class Learner
     }
 
     /**
-     * Set parents
-     *
-     * @param \AppBundle\Entity\Parents $parents
+     * @param Mother $mother
      *
      * @return Learner
      */
-    public function setParents(\AppBundle\Entity\Parents $parents = null)
+    public function setMother(Mother $mother = null)
     {
-        $this->parents = $parents;
+        $this->mother = $mother;
 
         return $this;
     }
 
     /**
-     * Get parents
-     *
-     * @return \AppBundle\Entity\Parents
+     * @return Mother
      */
-    public function getParents()
+    public function getMother()
     {
-        return $this->parents;
+        return $this->mother;
     }
+
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->marks = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->marks = new ArrayCollection();
     }
 
     /**
-     * Add mark
-     *
-     * @param \AppBundle\Entity\Mark $mark
+     * @param Mark $mark
      *
      * @return Learner
      */
-    public function addMark(\AppBundle\Entity\Mark $mark)
+    public function addMark(Mark $mark)
     {
         $this->marks[] = $mark;
 
@@ -126,19 +111,15 @@ class Learner
     }
 
     /**
-     * Remove mark
-     *
-     * @param \AppBundle\Entity\Mark $mark
+     * @param Mark $mark
      */
-    public function removeMark(\AppBundle\Entity\Mark $mark)
+    public function removeMark(Mark $mark)
     {
         $this->marks->removeElement($mark);
     }
 
     /**
-     * Get marks
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getMarks()
     {
@@ -146,8 +127,6 @@ class Learner
     }
 
     /**
-     * Set created
-     *
      * @param \DateTime $created
      *
      * @return Learner
@@ -160,8 +139,6 @@ class Learner
     }
 
     /**
-     * Get created
-     *
      * @return \DateTime
      */
     public function getCreated()

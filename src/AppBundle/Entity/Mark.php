@@ -6,16 +6,12 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Mark
- *
  * @ORM\Table(name="mark")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\MarkRepository")
  */
 class Mark
 {
     /**
-     * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -23,8 +19,6 @@ class Mark
     private $id;
 
     /**
-     * @var int
-     *
      * @ORM\Column(name="mark", type="integer")
      */
     private $mark;
@@ -48,15 +42,12 @@ class Mark
     private $subject;
 
     /**
-     * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
     private $created;
 
 
     /**
-     * Get id
-     *
      * @return int
      */
     public function getId()
@@ -65,8 +56,6 @@ class Mark
     }
 
     /**
-     * Set mark
-     *
      * @param integer $mark
      *
      * @return Mark
@@ -79,8 +68,6 @@ class Mark
     }
 
     /**
-     * Get mark
-     *
      * @return int
      */
     public function getMark()
@@ -89,13 +76,11 @@ class Mark
     }
 
     /**
-     * Set learner
-     *
-     * @param \AppBundle\Entity\Learner $learner
+     * @param Learner $learner
      *
      * @return Mark
      */
-    public function setLearner(\AppBundle\Entity\Learner $learner = null)
+    public function setLearner(Learner $learner = null)
     {
         $this->learner = $learner;
 
@@ -103,8 +88,6 @@ class Mark
     }
 
     /**
-     * Get learner
-     *
      * @return \AppBundle\Entity\Learner
      */
     public function getLearner()
@@ -113,13 +96,11 @@ class Mark
     }
 
     /**
-     * Set teacher
-     *
-     * @param \AppBundle\Entity\Teacher $teacher
+     * @param Teacher $teacher
      *
      * @return Mark
      */
-    public function setTeacher(\AppBundle\Entity\Teacher $teacher = null)
+    public function setTeacher(Teacher $teacher = null)
     {
         $this->teacher = $teacher;
 
@@ -127,9 +108,7 @@ class Mark
     }
 
     /**
-     * Get teacher
-     *
-     * @return \AppBundle\Entity\Teacher
+     * @return Teacher
      */
     public function getTeacher()
     {
@@ -137,13 +116,11 @@ class Mark
     }
 
     /**
-     * Set subject
-     *
-     * @param \AppBundle\Entity\Subject $subject
+     * @param Subject $subject
      *
      * @return Mark
      */
-    public function setSubject(\AppBundle\Entity\Subject $subject = null)
+    public function setSubject(Subject $subject = null)
     {
         $this->subject = $subject;
 
@@ -151,9 +128,7 @@ class Mark
     }
 
     /**
-     * Get subject
-     *
-     * @return \AppBundle\Entity\Subject
+     * @return Subject
      */
     public function getSubject()
     {
@@ -161,8 +136,6 @@ class Mark
     }
 
     /**
-     * Set created
-     *
      * @param \DateTime $created
      *
      * @return Mark
@@ -175,8 +148,6 @@ class Mark
     }
 
     /**
-     * Get created
-     *
      * @return \DateTime
      */
     public function getCreated()

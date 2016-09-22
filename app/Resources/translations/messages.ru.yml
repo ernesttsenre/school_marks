@@ -1,0 +1,15 @@
+project_title: Symfony school marks project
+welcome: Добро пожаловать
+select_self: Выберите себя в списке
+empty_data: Данных нет
+date: Дата
+marks_by_week: Оценки за %week% неделю
+
+menu.title: Оценки
+menu.main_page: Главная
+
+breadcrumbs.all_subjects: Все предметы
+
+subject.header: Предмет
+learner.header: Учитель
+mark.header: Оценка

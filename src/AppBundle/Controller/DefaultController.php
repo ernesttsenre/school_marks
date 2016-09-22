@@ -2,33 +2,45 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\AppBundle;
-use AppBundle\Form\MarkFilterType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use AppBundle\Form\MarkFilterType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class DefaultController extends Controller
 {
     /**
      * @Route("/", name="homepage")
+     * @return Response
      */
-    public function indexAction(Request $request)
+    public function indexAction()
     {
-        return $this->render('default/index.html.twig');
+        $mothers = $this->getDoctrine()
+            ->getRepository('AppBundle:Mother')
+            ->findAll();
+
+        return $this->render('/default/index.html.twig', [
+            'mothers' => $mothers
+        ]);
     }
 
     /**
-     * @Route("/marks/{parents_id}", name="marks_page", requirements={"parents_id": "\d+"})
-     * @Route("/marks/{parents_id}/{subject_id}", name="marks_by_subject_page", requirements={"parents_id": "\d+"})
+     * @param Request $request
+     * @param int $motherId
+     * @param int $subjectId
+     *
+     * @Route("/marks/{motherId}", name="marks_page", requirements={"motherId": "\d+"})
+     * @Route("/marks/{motherId}/{subjectId}", name="marks_by_subject_page", requirements={"motherId": "\d+"})
+     * @return Response
      */
-    public function marksAction(Request $request, $parents_id, $subject_id = null)
+    public function marksAction(Request $request, $motherId, $subjectId = null)
     {
         $week = new \DateTime('monday this week');
 
         // Форма для фильтрации по предметам
         $form = $this->createForm(MarkFilterType::class, null, [
-            'parentsId' => $parents_id,
+            'motherId' => $motherId,
             'weekStart' => $week
         ]);
 
@@ -36,25 +48,27 @@ class DefaultController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $filterMark = $form->get('filter')->getData();
             if ($filterMark) {
-                $subject_id = $filterMark->getSubject()->getId();
+                $subjectId = $filterMark->getSubject()->getId();
             }
         }
 
         // Оценки детей отфильтрованные по родителю и предмету
-        $marks = $this->getDoctrine()->getRepository('AppBundle:Mark')->findByParentsAndSubject($week, $parents_id, $subject_id);
+        $marks = $this->getDoctrine()
+            ->getRepository('AppBundle:Mark')
+            ->findByParentsAndSubject($week, $motherId, $subjectId);
 
         // Если фильтровался предмет, то он тоже нужен в виде
         $subject = null;
-        if (!is_null($subject_id)) {
-            $subject = $this->getDoctrine()->getRepository('AppBundle:Subject')->find($subject_id);
+        if (!is_null($subjectId)) {
+            $subject = $this->getDoctrine()->getRepository('AppBundle:Subject')->find($subjectId);
         }
 
         // Родитель, чтобы знать, каких детей искать
-        $parents = $this->getDoctrine()->getRepository('AppBundle:Parents')->find($parents_id);
+        $mother = $this->getDoctrine()->getRepository('AppBundle:Mother')->find($motherId);
 
         return $this->render('default/marks.html.twig', [
             'week' => $week,
-            'parents' => $parents,
+            'mother' => $mother,
             'marks' => $marks,
             'subject' => $subject,
             'filterForm' => $form->createView()

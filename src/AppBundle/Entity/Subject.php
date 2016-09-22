@@ -2,20 +2,18 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Subject
- *
  * @ORM\Table(name="subject")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\SubjectRepository")
+ * @ORM\Entity
  */
 class Subject
 {
     /**
-     * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -23,14 +21,12 @@ class Subject
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
 
     /**
-     * @ORM\OneToMany(targetEntity="Mark", mappedBy="learner")
+     * @ORM\OneToMany(targetEntity="Mark", mappedBy="subject")
      */
     private $marks;
 
@@ -41,8 +37,6 @@ class Subject
     private $created;
 
     /**
-     * Get id
-     *
      * @return int
      */
     public function getId()
@@ -51,8 +45,6 @@ class Subject
     }
 
     /**
-     * Set title
-     *
      * @param string $title
      *
      * @return Subject
@@ -65,8 +57,6 @@ class Subject
     }
 
     /**
-     * Get title
-     *
      * @return string
      */
     public function getTitle()
@@ -78,17 +68,15 @@ class Subject
      */
     public function __construct()
     {
-        $this->marks = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->marks = new ArrayCollection();
     }
 
     /**
-     * Add mark
-     *
-     * @param \AppBundle\Entity\Mark $mark
+     * @param Mark $mark
      *
      * @return Subject
      */
-    public function addMark(\AppBundle\Entity\Mark $mark)
+    public function addMark(Mark $mark)
     {
         $this->marks[] = $mark;
 
@@ -96,19 +84,15 @@ class Subject
     }
 
     /**
-     * Remove mark
-     *
-     * @param \AppBundle\Entity\Mark $mark
+     * @param Mark $mark
      */
-    public function removeMark(\AppBundle\Entity\Mark $mark)
+    public function removeMark(Mark $mark)
     {
         $this->marks->removeElement($mark);
     }
 
     /**
-     * Get marks
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getMarks()
     {
@@ -116,8 +100,6 @@ class Subject
     }
 
     /**
-     * Set created
-     *
      * @param \DateTime $created
      *
      * @return Subject
@@ -130,8 +112,6 @@ class Subject
     }
 
     /**
-     * Get created
-     *
      * @return \DateTime
      */
     public function getCreated()

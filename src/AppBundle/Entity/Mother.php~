@@ -8,10 +8,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="learner")
+ * @ORM\Table(name="mother")
  * @ORM\Entity
  */
-class Learner
+class Mother
 {
     /**
      * @ORM\Column(name="id", type="integer")
@@ -26,21 +26,16 @@ class Learner
     private $title;
 
     /**
+     * @ORM\OneToMany(targetEntity="Learner", mappedBy="mother")
+     */
+    private $learners;
+
+    /**
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
     private $created;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="Mother", inversedBy="learners")
-     * @ORM\JoinColumn(name="mother_id", referencedColumnName="id")
-     */
-    private $mother;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Mark", mappedBy="learner")
-     */
-    private $marks;
 
     /**
      * @return int
@@ -53,7 +48,7 @@ class Learner
     /**
      * @param string $title
      *
-     * @return Learner
+     * @return Mother
      */
     public function setTitle($title)
     {
@@ -69,67 +64,46 @@ class Learner
     {
         return $this->title;
     }
-
-    /**
-     * @param Mother $mother
-     *
-     * @return Learner
-     */
-    public function setMother(Mother $mother = null)
-    {
-        $this->mother = $mother;
-
-        return $this;
-    }
-
-    /**
-     * @return Mother
-     */
-    public function getMother()
-    {
-        return $this->mother;
-    }
-
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->marks = new ArrayCollection();
+        $this->learners = new ArrayCollection();
     }
 
     /**
-     * @param Mark $mark
+     * @param Learner $learner
      *
-     * @return Learner
+     * @return Mother
      */
-    public function addMark(Mark $mark)
+    public function addLearner(Learner $learner)
     {
-        $this->marks[] = $mark;
+        $this->learners[] = $learner;
 
         return $this;
     }
 
     /**
-     * @param Mark $mark
+     * @param Learner $learner
      */
-    public function removeMark(Mark $mark)
+    public function removeLearner(Learner $learner)
     {
-        $this->marks->removeElement($mark);
+        $this->learners->removeElement($learner);
     }
 
     /**
      * @return Collection
      */
-    public function getMarks()
+    public function getLearners()
     {
-        return $this->marks;
+        return $this->learners;
     }
 
     /**
      * @param \DateTime $created
      *
-     * @return Learner
+     * @return Mother
      */
     public function setCreated($created)
     {

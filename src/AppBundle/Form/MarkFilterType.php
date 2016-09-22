@@ -22,34 +22,37 @@ class MarkFilterType extends AbstractType
                 'class' => 'AppBundle:Mark',
                 'choice_value' => 'subject.id',
                 'choice_label' => 'subject.title',
-                'label' => 'Предмет',
-                'placeholder' => 'Выберите предмет',
+                'label' => 'subject.label',
+                'placeholder' => 'subject.placeholder',
+                'translation_domain' => 'forms',
+                'required' => false,
                 'query_builder' => function (EntityRepository $er) use ($options) {
                     return $er->createQueryBuilder('mark')
-                        ->join('mark.learner', 'learner', 'WITH', 'learner.parents = :parents_id')
+                        ->join('mark.learner', 'learner', 'WITH', 'learner.mother = :motherId')
                         ->join('mark.subject', 'subject')
-                        ->where('mark.created >= :week_start')
+                        ->where('mark.created >= :weekStart')
                         ->setParameters([
-                            'parents_id' => $options['parentsId'],
-                            'week_start' => $options['weekStart']
+                            'motherId' => $options['motherId'],
+                            'weekStart' => $options['weekStart']
                         ])
                         ->orderBy('subject.created')
                         ->groupBy('subject.id');
                 },
             ])
             ->add('apply', SubmitType::class, [
-                'label' => 'Применить'
+                'label' => 'apply.label',
+                'translation_domain' => 'forms',
             ])
         ;
     }
 
     /**
-     * {@inheritdoc}
+     * @param OptionsResolver $resolver
      */
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'parentsId' => null,
+            'motherId' => null,
             'weekStart' => new \DateTime()
         ));
     }

@@ -2,12 +2,16 @@
 
 {% block body %}
     <h1 class="mb20">
-        Оценки за {{ week|date('W') }} неделю
+        {% trans with {'%week%': week|date('W') } from "messages" %}marks_by_week{% endtrans %}
     </h1>
 
     {% if subject %}
         <ol class="breadcrumb">
-            <li><a href="{{ path('marks_page', {'parents_id': parents.id}) }}">Все предметы</a></li>
+            <li>
+                <a href="{{ path('marks_page', {'motherId': mother.id}) }}">
+                    {% trans from "messages" %}breadcrumbs.all_subjects{% endtrans %}
+                </a>
+            </li>
             <li class="active">{{ subject.title }}</li>
         </ol>
     {% endif %}
@@ -17,42 +21,54 @@
         {{ form(filterForm) }}
     </div>
 
-    {% for learner in parents.learners %}
-        <div class="jumbotron">
-            <p class="lead">{{ learner.title }}</p>
+    {% if mother %}
+        {% for learner in mother.learners %}
+            <div class="jumbotron">
+                <p class="lead">{{ learner.title }}</p>
 
-            <table class="table table-stripped">
-                <thead>
-                <tr>
-                    <th>Предмет</th>
-                    <th>Учитель</th>
-                    <th class="text-right">Оценка</th>
-                    <th class="text-right">Дата</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for mark in marks %}
-                    {% if mark.learner == learner %}
-                        <tr class="{{ mark.color }}">
-                            <td>
-                                <a href="{{ path('marks_by_subject_page', {'parents_id': parents.id, 'subject_id': mark.subject.id}) }}">
-                                    {{ mark.subject.title }}
-                                </a>
-                            </td>
-                            <td>
-                                {{ mark.teacher.title }}
-                            </td>
-                            <td class="text-right">
-                                {{ mark.mark }}
-                            </td>
-                            <td class="text-right">
-                                {{ mark.created|date('d.m.Y') }}
-                            </td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    {% endfor %}
+                <table class="table table-stripped">
+                    <thead>
+                    <tr>
+                        <th>
+                            {% trans from "messages" %}subject.header{% endtrans %}
+                        </th>
+                        <th>
+                            {% trans from "messages" %}learner.header{% endtrans %}
+                        </th>
+                        <th class="text-right">
+                            {% trans from "messages" %}mark.header{% endtrans %}
+                        </th>
+                        <th class="text-right">
+                            {% trans from "messages" %}date{% endtrans %}
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for mark in marks %}
+                        {% if mark.learner == learner %}
+                            <tr class="{{ mark.color }}">
+                                <td>
+                                    <a href="{{ path('marks_by_subject_page', {'motherId': mother.id, 'subjectId': mark.subject.id}) }}">
+                                        {{ mark.subject.title }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {{ mark.teacher.title }}
+                                </td>
+                                <td class="text-right">
+                                    {{ mark.mark }}
+                                </td>
+                                <td class="text-right">
+                                    {{ mark.created|date('d.m.Y') }}
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endfor %}
+    {% else %}
+        {% trans from "messages" %}empty_data{% endtrans %}
+    {% endif %}
 {% endblock %}

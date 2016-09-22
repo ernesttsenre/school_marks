@@ -1,5 +1,31 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Добро пожаловать</h1>
+    <h1>
+        {% trans from "messages" %}welcome{% endtrans %}
+    </h1>
+
+    <h4>
+        {% trans from "messages" %}select_self{% endtrans %}
+    </h4>
+
+    {% if mothers %}
+        <div class="jumbotron">
+            <table class="table table-stripped">
+                <tbody>
+                {% for mother in mothers %}
+                <tr>
+                    <td>
+                        <a href="{{ path('marks_page', {'mother_id': mother.id}) }}">
+                            {{ mother.title }}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        {% trans from "messages" %}empty_data{% endtrans %}
+    {% endif %}
 {% endblock %}

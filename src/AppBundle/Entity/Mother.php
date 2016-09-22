@@ -2,20 +2,18 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Parents
- *
- * @ORM\Table(name="parents")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\ParentsRepository")
+ * @ORM\Table(name="mother")
+ * @ORM\Entity
  */
-class Parents
+class Mother
 {
     /**
-     * @var int
-     *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -23,14 +21,12 @@ class Parents
     private $id;
 
     /**
-     * @var string
-     *
      * @ORM\Column(name="title", type="string", length=255)
      */
     private $title;
 
     /**
-     * @ORM\OneToMany(targetEntity="Learner", mappedBy="parents")
+     * @ORM\OneToMany(targetEntity="Learner", mappedBy="mother")
      */
     private $learners;
 
@@ -42,8 +38,6 @@ class Parents
 
 
     /**
-     * Get id
-     *
      * @return int
      */
     public function getId()
@@ -52,11 +46,9 @@ class Parents
     }
 
     /**
-     * Set title
-     *
      * @param string $title
      *
-     * @return Parents
+     * @return Mother
      */
     public function setTitle($title)
     {
@@ -66,8 +58,6 @@ class Parents
     }
 
     /**
-     * Get title
-     *
      * @return string
      */
     public function getTitle()
@@ -79,17 +69,15 @@ class Parents
      */
     public function __construct()
     {
-        $this->learners = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->learners = new ArrayCollection();
     }
 
     /**
-     * Add learner
+     * @param Learner $learner
      *
-     * @param \AppBundle\Entity\Learner $learner
-     *
-     * @return Parents
+     * @return Mother
      */
-    public function addLearner(\AppBundle\Entity\Learner $learner)
+    public function addLearner(Learner $learner)
     {
         $this->learners[] = $learner;
 
@@ -97,19 +85,15 @@ class Parents
     }
 
     /**
-     * Remove learner
-     *
-     * @param \AppBundle\Entity\Learner $learner
+     * @param Learner $learner
      */
-    public function removeLearner(\AppBundle\Entity\Learner $learner)
+    public function removeLearner(Learner $learner)
     {
         $this->learners->removeElement($learner);
     }
 
     /**
-     * Get learners
-     *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return Collection
      */
     public function getLearners()
     {
@@ -117,11 +101,9 @@ class Parents
     }
 
     /**
-     * Set created
-     *
      * @param \DateTime $created
      *
-     * @return Parents
+     * @return Mother
      */
     public function setCreated($created)
     {
@@ -131,8 +113,6 @@ class Parents
     }
 
     /**
-     * Get created
-     *
      * @return \DateTime
      */
     public function getCreated()
